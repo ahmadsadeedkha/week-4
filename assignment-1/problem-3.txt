@@ -1,0 +1,17 @@
+app/layout.tsx  (Root Layout)
+└── <Header />  (Persistent Header — stays mounted across ALL routes)
+└── <main>
+    └── {children}  (Swaps dynamically based on route)
+        ├── app/page.tsx             (Renders at /)
+        ├── app/about/page.tsx       (Renders at /about)
+        └── app/dashboard/page.tsx   (Renders at /dashboard)
+
+
+The root layout (app/layout.tsx) serves as the top-level shell. Because app/layout.tsx wraps all route targets, 
+Next.js keeps its state and DOM tree mounted during client-side <Link> navigation. 
+Only the {children} slot is unmounted and replaced with the active route's page.tsx.
+
+DEEPER
+
+Only /dashboard and any nested sub-routes beneath it get the extra chrome.
+Root routes outside the dashboard directory—such as / (app/page.tsx) and /about (app/about/page.tsx) will not inherit the dashboard layout.

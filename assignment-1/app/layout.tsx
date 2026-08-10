@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Nav from "./components/Nav";
+import Header from "./components/Header";
 
 export const metadata: Metadata = {
   title: "Assignment-1",
@@ -11,7 +11,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body>
-        <Nav />
+        <Header />
         <main className="max-w-full mx-auto bg-gray-300 p-4 flex justify-center font-bold">
           {children}
         </main>
