@@ -1,16 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import Nav from "./components/Nav";
 
 export const metadata: Metadata = {
   title: "Assignment-1",
@@ -19,11 +9,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body>
+        <Nav />
+        <main className="max-w-full mx-auto bg-gray-300 p-4 flex justify-center font-bold">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
+
+// DEEPER P1
+
+// It does not appear in the URL path at all.
+// Route groups allow us to organize our files logically or apply distinct layouts (via an inner (marketing)/layout.tsx)
+// to specific routes without altering the public URL structure. For example, app/(marketing)/about/page.tsx still renders at /about.
