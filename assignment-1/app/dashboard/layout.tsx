@@ -8,6 +8,12 @@ export default function DashboardLayout({ children }: LayoutProps<"/">) {
           <Link href="/dashboard" className="text-blue-600 hover:underline">
             Overview
           </Link>
+          <Link
+            href="/dashboard/user-profile"
+            className="text-blue-600 hover:underline"
+          >
+            User Profile
+          </Link>
         </nav>
       </aside>
       <main className="flex-1 p-4">{children}</main>

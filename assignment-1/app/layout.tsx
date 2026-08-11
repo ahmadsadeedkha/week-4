@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./components/Header";
+import Breadcrumbs from "./components/BreadCrumbs";
 
 export const metadata: Metadata = {
   title: "Assignment-1",
@@ -12,9 +13,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en">
       <body>
         <Header />
-        <main className="max-w-full mx-auto bg-gray-300 p-4">
-          {children}
-        </main>
+        <Breadcrumbs />
+        <main className="max-w-full mx-auto bg-gray-300 p-4">{children}</main>
       </body>
     </html>
   );
