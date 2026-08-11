@@ -1,0 +1,14 @@
+Problem-4 
+
+loading.tsx is automatically wrapped around your page using React Suspense. 
+For the loading UI to appear during navigation, the route's page.tsx must suspend meaning 
+it must be an async Server Component that awaits a unresolved Promise (such as a database query, API fetch, or explicit delay).
+
+A purely static or synchronous page resolves instantly on the server. 
+Because there is no asynchronous operation holding up the page component,
+it never suspends, and Next.js renders the final HTML immediately without ever showing the Suspense fallback.
+
+DEEPER
+
+To reliably demonstrate the loading state in development, we can place the delay directly inside 
+the async page component (e.g., app/dashboard/page.tsx) before returning the JSX.

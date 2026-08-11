@@ -12,7 +12,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en">
       <body>
         <Header />
-        <main className="max-w-full mx-auto bg-gray-300 p-4 flex justify-center font-bold">
+        <main className="max-w-full mx-auto bg-gray-300 p-4">
           {children}
         </main>
       </body>

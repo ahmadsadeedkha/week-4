@@ -5,7 +5,6 @@ export default function Nav() {
     <nav className="flex gap-5 p-4 bg-black text-white justify-center">
       <Link href="/">Home</Link>
       <Link href="/about">About</Link>
-      <a href="/about">About-a</a> {/* Added for testing only */}
       <Link href="/dashboard">Dashboard</Link>
     </nav>
   );
