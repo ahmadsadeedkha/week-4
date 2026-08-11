@@ -1,0 +1,27 @@
+Problem-7
+Tracing of this problem is done using problem-4 Implementation
+
+Prefetching (Viewport/Hover): 
+    When the <Link> enters the browser viewport or is hovered over, Next.js prefetches the React Server Component payload for /dashboard in the background.
+
+User Click: 
+    The user clicks the link. Next.js intercepts the event and prevents a standard browser document load (preventDefault).
+
+Client-Side Navigation: 
+    The router client-side runtime immediately updates the browser URL in the address bar without triggering a fresh HTTP document request.
+
+Suspense Trigger & loading.tsx Fallback: 
+    The active route contains an async Server Component. Because its data hasn't finished resolving, the route segment suspends. 
+    Next.js instantly swaps the target page slot with the loading.tsx fallback UI.
+
+Server Processing: 
+    The server finishes executing the async Server Component and streams the updated React Server Component payload to the client over the existing network connection.
+
+Segment Swap: 
+    Next.js receives the stream, unmounts loading.tsx, and seamlessly swaps in the rendered page.tsx payload into the {children} slot.
+
+
+DEEPER
+
+The parent Root Layout (app/layout.tsx) and any higher-level layout wrappers remain mounted in the DOM without re-rendering.
+Only the leaf segment that changes (app/about/page.tsx unmounts, and app/dashboard/page.tsx mounts) is re-rendered and swapped inside the persistent layout's {children} slot.
