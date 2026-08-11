@@ -1,0 +1,30 @@
+Problem-5
+
+Next.js automatically wraps every route segment and its child pages inside a React Error Boundary. 
+When an error is thrown inside a Server Component, Client Component, or data fetch within that route segment, 
+React intercepts the error and renders error.tsx instead of crashing the application.
+
+React Error Boundaries require client-side interactivity to catch uncaught runtime errors, 
+manage internal error state and execute lifecycle logic.
+error.tsx receives a reset() function prop. 
+Triggering reset() requires client-side event listeners (e.g., an onClick handler on a button) to tell 
+Next.js to re-render the server component segment and attempt recovery.
+
+DEEPER
+
+An error.tsx file catches errors thrown by its sibling page.tsx or nested child components, but not errors thrown within its own same-level layout.tsx. 
+Because layout.tsx sits outside the error.tsx boundary in the component tree hierarchy, the error bubbles upward.
+To catch errors in a layout, place an error.tsx file in the parent directory segment above it. 
+To catch errors occurring in the root layout (app/layout.tsx), define a app/global-error.tsx component.
+
+Execution order / Component tree hierarchy:
+
+<Layout>
+  <ErrorBoundary fallback={<Error />}>
+    <Suspense fallback={<Loading />}>
+      <Page />
+    </Suspense>
+  </ErrorBoundary>
+</Layout>
+
+layout.tsx -> error.tsx -> loading.tsx -> page.tsx
