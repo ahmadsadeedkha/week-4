@@ -1,0 +1,23 @@
+Problem-1
+
+
+List Fetch → Server
+Reason: Data-fetching
+
+Detail Fetch → Server
+Reason: Static/dynamic-rendering 
+
+Search Box → Client
+Reason: State 
+
+Region Filter → Client
+Reason: State
+
+Nav Header → Server
+Reason: Static 
+
+
+DEEPER
+
+The Server Component fetches the full dataset once and passes the static array as props down to Client Component (<CountryExplorer countries="{countries}"/>) that handles filtering locally via standard useState. 
+The parent page and top-level layouts remain 100% Server Components.
