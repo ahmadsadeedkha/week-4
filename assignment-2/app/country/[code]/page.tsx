@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { isValidCca3 } from "@/lib/validation";
 import { getCountryByCode, getCountriesByCodes } from "@/lib/api";
 import { borderLinks } from "@/lib/BorderLinks";
 
@@ -8,8 +9,12 @@ export default async function CountryDetailPage({
   params,
 }: PageProps<"/country/[code]">) {
   const { code } = await params;
-  const country = await getCountryByCode(code.toUpperCase());
 
+  if (!isValidCca3(code)) {
+    notFound();
+  }
+
+  const country = await getCountryByCode(code.toUpperCase());
   if (!country) {
     notFound();
   }

@@ -1,0 +1,10 @@
+Problem-7
+
+DEEPER
+
+A shape check — is this three letters, is it non-empty, does it match the alphabetic pattern a cca3 code is supposed to have — is a question you can answer entirely with information already sitting in the request itself. 
+It's a regex test running synchronously inside the server process, resolved in effectively zero time, with no dependency on anything outside your own code. 
+An existence check, by contrast, is a fundamentally different kind of question: "is ZZZ an actual country code in the REST Countries dataset" isn't something you can determine by inspecting the string alone. 
+You'd need a local, exhaustive list of every valid cca3 code to answer that offline, and maintaining that list yourself would mean manually keeping it in sync with a third-party API forever — worse than just asking the API directly. 
+So the shape check is something you can do for free, and the existence check is something you're forced to pay for.
+That cost asymmetry is exactly why validating before the fetch is cheaper in practice.
