@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getCountryByCode, getCountriesByCodes } from "@/lib/api";
+import { borderLinks } from "@/lib/BorderLinks";
 
 export default async function CountryDetailPage({
   params,
@@ -13,7 +14,10 @@ export default async function CountryDetailPage({
     notFound();
   }
 
-  const borderCountries = await getCountriesByCodes(country.borders ?? []);
+  //DEEPER - P2
+  const borderCodes = country.borders ?? [];
+  const borderCountries = await getCountriesByCodes(borderCodes);
+  const links = borderLinks(borderCodes);
 
   return (
     <div>
@@ -72,15 +76,18 @@ export default async function CountryDetailPage({
                 Border Countries
               </h2>
               <div className="flex flex-wrap gap-2">
-                {borderCountries.map((b) => (
-                  <Link
-                    key={b.cca3}
-                    href={`/country/${b.cca3}`}
-                    className="rounded-md border border-slate-300 bg-white font-bold px-3 py-1 text-sm hover:bg-slate-100"
-                  >
-                    {b.name.common}
-                  </Link>
-                ))}
+                {links.map(({ code, href }) => {
+                  const border = borderCountries.find((b) => b.cca3 === code);
+                  return (
+                    <Link
+                      key={code}
+                      href={href}
+                      className="rounded-md border border-slate-300 bg-white font-bold px-3 py-1 text-sm hover:bg-slate-100"
+                    >
+                      {border?.name.common ?? code}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           )}
