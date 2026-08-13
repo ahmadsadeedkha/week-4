@@ -1,0 +1,11 @@
+Problem-3
+
+getAllCountries() is awaited inside app/page.tsx, which is a Server Component (no 'use client'). 
+Server Components execute on the server, during the render that produces the response — not in the user's browser at all.
+
+DEEPER
+
+fetch still runs on the server, every time client-side navigation only changes how the browser talks to the Next.js server (an RSC fetch instead of a full document reload). 
+It never changes where the data-fetching component's code executes. 
+What you will see in the browser network tab is a request to your own app (the RSC transition), but you will still never see a direct browser → restcountries.conventus.de request, 
+because the Server Component boundary is enforced regardless of whether the navigation is a hard reload or a soft client-side transition.
