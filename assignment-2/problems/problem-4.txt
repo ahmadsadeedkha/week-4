@@ -1,0 +1,11 @@
+Problem-4
+
+implementation done on CountryDetailPage 
+which sends the code to getCountryByCode(code.toUpperCase()) in uppercase so no case sensitive issue and in returns receive a country or null,
+and then call notFound() if received null.
+
+DEEPER
+
+notFound() in Next.js is designed exactly for "valid request, no matching resource" the semantic equivalent of an HTTP 404. 
+It's not an error condition; it's a normal, anticipated branch of program's logic. 
+A bad cca3 code (ZZZ) isn't a bug or a crash — it's a completely predictable outcome of a user typing a bad URL, and the code should model it as data (null), not as an exception.
