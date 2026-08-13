@@ -1,0 +1,11 @@
+Problem-6
+
+'use client' is a module boundary directive, not a "this component is interactive" flag. 
+Placed at the top of a file, it means: this module, and every component this module directly imports and renders itself, gets bundled for the browser and hydrated there.
+Importing a Client Component into a Server Component does not "infect" the importer. 
+The boundary only flows downward through imports, not upward to whoever renders it.
+
+DEEPER
+
+The Client Component defines the shape (state, interactivity, layout structure), while the Server Component composes what actually goes inside that shape, at the top of the tree where the import boundary is still on the server side. 
+It's the mechanism that lets you nest Server Components arbitrarily deep inside a Client Component's rendered output, as long as they arrive as children/props rather than being imported from within the client module itself.
