@@ -1,7 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useActionState, useState } from "react";
 import { ContactFormRawValues } from "@/lib/validation";
 import {
   submitContactForm,
@@ -73,7 +72,6 @@ const inputClasses =
 const labelClasses = "mb-1.5 block text-sm font-medium text-gray-700";
 
 export function ContactForm() {
-  const formRef = useRef<HTMLFormElement>(null);
   const [actionResult, formAction, isPending] = useActionState(
     submitContactForm,
     initialActionState,
@@ -84,12 +82,12 @@ export function ContactForm() {
   const fieldErrors = state.status === "error" ? state.errors : undefined;
   const values = state.status === "error" ? state.values : undefined;
 
+  const [prevActionResult, setPrevActionResult] = useState(actionResult);
   const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    if (!isPending) {
-      setAttempt((n) => n + 1);
-    }
-  }, [actionResult, isPending]);
+  if (actionResult !== prevActionResult) {
+    setPrevActionResult(actionResult);
+    setAttempt((n) => n + 1);
+  }
 
   return (
     <div>
