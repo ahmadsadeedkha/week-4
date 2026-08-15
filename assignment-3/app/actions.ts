@@ -6,16 +6,15 @@ export type ContactFieldErrors = Partial<
   Record<"name" | "email" | "age" | "message", string>
 >;
 
-export type ContactFormState = {
-  status: "idle" | "success" | "error";
-  message: string;
-  errors?: ContactFieldErrors;
-};
+export type ContactActionResult =
+  | { status: "idle" }
+  | { status: "success" }
+  | { status: "error"; message: string; errors?: ContactFieldErrors };
 
 export async function submitContactForm(
-  _prevState: ContactFormState,
+  _prevState: ContactActionResult,
   formData: FormData,
-): Promise<ContactFormState> {
+): Promise<ContactActionResult> {
   const raw = {
     name: formData.get("name"),
     email: formData.get("email"),
@@ -35,7 +34,7 @@ export async function submitContactForm(
     }
     return {
       status: "error",
-      message: "Please fix the errors below and try again.",
+      message: "Please fix the errors and try again.",
       errors: fieldErrors,
     };
   }
@@ -47,6 +46,5 @@ export async function submitContactForm(
 
   return {
     status: "success",
-    message: `Thanks ${parsed.data.name}, your message has been sent.`,
   };
 }
