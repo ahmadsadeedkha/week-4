@@ -16,13 +16,20 @@ export const contactSchema = z.object({
 
 export type ContactFormValues = z.infer<typeof contactSchema>;
 
+export type ContactFormRawValues = Record<keyof ContactFormValues, string>;
+
 export type FieldErrors<T extends z.ZodTypeAny> = Partial<
   Record<keyof z.infer<T>, string>
 >;
 
+export type RawValues<T extends z.ZodTypeAny> = Record<
+  keyof z.infer<T>,
+  string
+>;
+
 export type ParseFormResult<T extends z.ZodTypeAny> =
   | { ok: true; data: z.infer<T> }
-  | { ok: false; errors: FieldErrors<T> };
+  | { ok: false; errors: FieldErrors<T>; values: RawValues<T> };
 
 // The boundary between raw browser input and trusted server data.
 // FormData values are always strings — coercion (e.g. age -> number)
@@ -32,7 +39,7 @@ export function parseForm<T extends z.ZodTypeAny>(
   schema: T,
   formData: FormData,
 ): ParseFormResult<T> {
-  const raw = Object.fromEntries(formData);
+  const raw = Object.fromEntries(formData) as RawValues<T>;
   const parsed = schema.safeParse(raw);
 
   if (!parsed.success) {
@@ -47,7 +54,7 @@ export function parseForm<T extends z.ZodTypeAny>(
         errors[field as keyof FieldErrors<T>] = messages[0];
       }
     }
-    return { ok: false, errors };
+    return { ok: false, errors, values: raw };
   }
 
   return { ok: true, data: parsed.data };

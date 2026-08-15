@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { ContactFormRawValues } from "@/lib/validation";
 import {
   submitContactForm,
   type ContactActionResult,
@@ -12,12 +13,16 @@ type ContactFormState =
   | { status: "idle" }
   | { status: "submitting" }
   | { status: "success" }
-  | { status: "error"; message: string; errors?: ContactFieldErrors };
+  | {
+      status: "error";
+      message: string;
+      errors?: ContactFieldErrors;
+      values?: ContactFormRawValues;
+    };
 
 const initialActionState: ContactActionResult = { status: "idle" };
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+function SubmitButton({ pending }: { pending: boolean }) {
   return (
     <button
       type="submit"
@@ -68,6 +73,7 @@ const inputClasses =
 const labelClasses = "mb-1.5 block text-sm font-medium text-gray-700";
 
 export function ContactForm() {
+  const formRef = useRef<HTMLFormElement>(null);
   const [actionResult, formAction, isPending] = useActionState(
     submitContactForm,
     initialActionState,
@@ -76,6 +82,14 @@ export function ContactForm() {
     ? { status: "submitting" }
     : actionResult;
   const fieldErrors = state.status === "error" ? state.errors : undefined;
+  const values = state.status === "error" ? state.values : undefined;
+
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    if (!isPending) {
+      setAttempt((n) => n + 1);
+    }
+  }, [actionResult, isPending]);
 
   return (
     <div>
@@ -90,10 +104,12 @@ export function ContactForm() {
             Name
           </label>
           <input
+            key={`name-${attempt}`}
             id="name"
             name="name"
             type="text"
             placeholder="Ahmad Sadeed Khan"
+            defaultValue={values?.name ?? ""}
             aria-invalid={!!fieldErrors?.name}
             className={inputClasses}
           />
@@ -105,10 +121,12 @@ export function ContactForm() {
             Email
           </label>
           <input
+            key={`email-${attempt}`}
             id="email"
             name="email"
             type="email"
             placeholder="ahmad@example.com"
+            defaultValue={values?.email ?? ""}
             aria-invalid={!!fieldErrors?.email}
             className={inputClasses}
           />
@@ -120,11 +138,13 @@ export function ContactForm() {
             Age
           </label>
           <input
+            key={`age-${attempt}`}
             id="age"
             name="age"
             type="number"
             min={18}
             placeholder="18"
+            defaultValue={values?.age ?? ""}
             aria-invalid={!!fieldErrors?.age}
             className={inputClasses}
           />
@@ -136,10 +156,12 @@ export function ContactForm() {
             Message
           </label>
           <textarea
+            key={`message-${attempt}`}
             id="message"
             name="message"
             rows={4}
             placeholder="Tell us what's on your mind..."
+            defaultValue={values?.message ?? ""}
             aria-invalid={!!fieldErrors?.message}
             className={`${inputClasses} resize-none`}
           />
@@ -147,7 +169,13 @@ export function ContactForm() {
         </div>
 
         <div className="flex flex-col-reverse items-stretch gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
-          <div id="form-status" className="min-h-6">
+          <div
+            id="form-status"
+            role="status"
+            aria-live={state.status === "error" ? "assertive" : "polite"}
+            aria-atomic="true"
+            className="min-h-6"
+          >
             {state.status === "success" && (
               <p
                 role="status"
@@ -162,7 +190,7 @@ export function ContactForm() {
               </p>
             )}
           </div>
-          <SubmitButton />
+          <SubmitButton pending={state.status === "submitting"} />
         </div>
       </form>
     </div>
