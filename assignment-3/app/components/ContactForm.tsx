@@ -77,6 +77,22 @@ export function ContactForm() {
         </div>
 
         <div>
+          <label htmlFor="age" className={labelClasses}>
+            Age
+          </label>
+          <input
+            id="age"
+            name="age"
+            type="number"
+            min={18}
+            placeholder="18"
+            aria-invalid={!!state.errors?.age}
+            className={inputClasses}
+          />
+          <FieldError message={state.errors?.age} />
+        </div>
+
+        <div>
           <label htmlFor="message" className={labelClasses}>
             Message
           </label>
