@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getAllCountries } from "../lib/api";
 import CountryExplorer from "@/components/CountryExplorer";
 

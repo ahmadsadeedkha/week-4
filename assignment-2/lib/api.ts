@@ -1,8 +1,6 @@
 import { Country } from "./types";
 
 const BASE_URL = "https://restcountries.conventus.de/v3.1";
-const FIELDS =
-  "name,cca3,capital,population,region,subregion,languages,flags,borders";
 
 export async function getAllCountries(): Promise<Country[]> {
   const res = await fetch(
