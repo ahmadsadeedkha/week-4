@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { contactSchema } from "@/lib/validation";
+import { contactSchema, parseForm } from "@/lib/validation";
 
 export type ContactFieldErrors = Partial<
   Record<"name" | "email" | "age" | "message", string>
@@ -15,27 +15,14 @@ export async function submitContactForm(
   _prevState: ContactActionResult,
   formData: FormData,
 ): Promise<ContactActionResult> {
-  const raw = {
-    name: formData.get("name"),
-    email: formData.get("email"),
-    age: formData.get("age"),
-    message: formData.get("message"),
-  };
+  
+  const result = parseForm(contactSchema, formData);
 
-  const parsed = contactSchema.safeParse(raw);
-
-  if (!parsed.success) {
-    const { fieldErrors: rawFieldErrors } = z.flattenError(parsed.error);
-    const fieldErrors: ContactFieldErrors = {};
-    for (const [field, messages] of Object.entries(rawFieldErrors)) {
-      if (messages?.[0]) {
-        fieldErrors[field as keyof ContactFieldErrors] = messages[0];
-      }
-    }
+  if (!result.ok) {
     return {
       status: "error",
       message: "Please fix the errors and try again.",
-      errors: fieldErrors,
+      errors: result.errors as ContactFieldErrors,
     };
   }
 
