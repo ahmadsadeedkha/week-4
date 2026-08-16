@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-black px-4 py-10 flex flex-col items-center">
-        <nav className="mb-8 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+      <body className="min-h-screen bg-black px-4 py-10">
+        <nav className="mb-8 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white text-center">
           <Link href="/">Country Explorer</Link>
         </nav>
         <main>{children}</main>
