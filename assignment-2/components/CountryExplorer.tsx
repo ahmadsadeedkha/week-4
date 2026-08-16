@@ -28,7 +28,7 @@ export default function CountryExplorer({ countries }: CountryExplorerProps) {
   }, [countries, search, region]);
 
   return (
-    <div>
+    <div className="w-full flex flex-col items-center">
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
         <input
           type="text"
@@ -53,7 +53,7 @@ export default function CountryExplorer({ countries }: CountryExplorerProps) {
       {filtered.length === 0 ? (
         <p className="text-slate-500">No countries match your search.</p>
       ) : (
-        <div className="max-w-7xl w-full grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6">
+        <div className="max-w-7xl w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filtered.map((c) => (
             <CountryCard key={c.cca3} country={c} />
           ))}
