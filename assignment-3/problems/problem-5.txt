@@ -1,0 +1,22 @@
+Problem-5
+
+Route handlers (app/api/.../route.ts) execute exclusively on the server never in a browser. 
+The function body, including process.env.API_KEY, is never bundled into any JavaScript file the browser downloads. 
+When a client fetches /api/config, it only receives the return value — the JSON you explicitly construct in the Response.json(...) call. 
+The source code that read API_KEY isn't shipped; only whatever you chose to put in the response body is. 
+So API_KEY stays server-side unless deliberately echo it back in the JSON
+
+Next.js scans client ('use client') code at build time and only inlines process.env.NEXT_PUBLIC_* references as literal strings into the bundle. 
+Anything else is left as it is and browsers have no process global, so it resolves to undefined at runtime. 
+Not a security block, just nothing was substituted in.
+
+DEEPER
+
+Ask: if this value were visible in page source to every visitor, would anything bad happen?
+
+SUPPORT_EMAIL, MAX_MESSAGE_LENGTH: safe, no risk if public.
+API_BASE_URL: lean private; exposes internal infra structure for no real benefit since it's already proxied server-side.
+Anything like API_KEY, DB URLs, secrets: never — these grant access, not just information.
+
+Rule: NEXT_PUBLIC_ isn't a privacy setting it's a declaration that a value was never secret. 
+If exposing it changes your security posture at all, keep it server-only.
