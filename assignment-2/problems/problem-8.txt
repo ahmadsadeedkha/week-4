@@ -1,0 +1,23 @@
+Problem-8
+
+What stays put: app/layout.tsx — the <html>, <body>, and the nav header inside it — does not re-render or re-mount at all. 
+Next.js's App Router matches the new URL against the route tree and only re-renders the segments that actually changed between the old path and the new one. 
+Both /country/FRA and /country/ESP share the exact same layout.tsx ancestor (they're both under app/country/[code]/, which itself is under the root layout), so that shared layout is treated as stable across the transition 
+React reconciles it as the same component instance, doesn't unmount it, doesn't refetch anything in it, and doesn't lose any client-side state it might hold.
+
+What re-renders: only the [code] segment — specifically, everything from app/country/[code]/page.tsx down. 
+The router sees that code went from FRA to ESP, treats that dynamic segment as changed, and swaps out just that subtree.
+
+Where Spain's data gets fetched: on the server, again, exactly the same mechanism as any first load. 
+Clicking the Link doesn't do a full page reload, but it does trigger the App Router to request the new segment's content from the Next.js server (not from restcountries.com directly). 
+On the server, country/[code]/page.tsx runs fresh for params.code === 'ESP', and inside it await getCountryByCode('ESP') executes — that's where the actual restcountries.com fetch happens, on the server, same as it did for France. 
+The server renders the new segment and sends back the updated RSC payload; the browser patches that into the DOM in place of the France content, while the layout around it never moved.
+
+
+DEEPER
+
+By default, Next.js's <Link> component prefetches the linked route when it scrolls into the viewport (in production builds — this is disabled in dev mode). 
+So while the user is still reading France's page, and Spain's border link is simply visible on screen, Next.js quietly kicks off a background request for the /country/ESP route segment — running page.tsx for ESP on the server ahead of time and caching the resulting RSC payload on the client.
+
+This means the actual fetch to restcountries.com for Spain can happen before the click, not because of it. 
+By the time the user clicks, the router often already has the rendered payload sitting in its client-side cache, so the "navigation" is really just: match the URL, pull the already-fetched result out of cache, swap it into the DOM.
